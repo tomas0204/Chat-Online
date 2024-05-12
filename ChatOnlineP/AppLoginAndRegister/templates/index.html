@@ -1,0 +1,33 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'index.css' %}?=v6">
+    <title>Document</title>
+</head>
+<body>
+    <div class="login-form">
+        <div class="text">
+           LOGIN
+        </div>
+        <form>
+           <div class="field">
+              <div class="fas fa-envelope"></div>
+              <input type="text" placeholder="Email or Phone">
+           </div>
+           <div class="field">
+              <div class="fas fa-lock"></div>
+              <input type="password" placeholder="Password">
+           </div>
+           <button>LOGIN</button>
+           <div class="link">
+              Not a member?
+              <a href="{% url 'helloregister' %}">Signup now</a>
+           </div>
+        </form>
+     </div>
+</body>
+</html>
