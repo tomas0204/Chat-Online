@@ -21,7 +21,8 @@ from AppChat.views import *
 
 
 urlpatterns = [
-    path("",hellologin,name="hellologin"),
-    path("register",helloregister,name="helloregister"),
+    path("",nickname, name="nickname"),
+    # path("",hellologin,name="hellologin"),
+    # path("register",helloregister,name="helloregister"),
     path("chat",hellochat,name="hellochat")
 ]
