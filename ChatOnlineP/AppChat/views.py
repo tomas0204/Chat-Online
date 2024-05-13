@@ -6,13 +6,18 @@ def nickname(request):
     if request.method == "POST":
         username = request.POST.get("username")
         request.session['username'] = username
-        return redirect('hellochat')  # Redirige a la vista hellochat sin pasar ningún argumento
-    else:
-        return render(request, "nickname.html")
+        if username:  # Verifica si el nombre de usuario no está vacío
+            user = Users(username=username)
+            user.save()  # Guarda el nuevo usuario en la base de datos
+            print (user)
+            return redirect('hellochat')  # Redirige a la vista hellochat
+        else:
+            print("No se proporcionó un nombre de usuario válido")
+    return render(request, "nickname.html")
 
 def hellochat(request):
     username = request.session.get('username')  # Obtiene el nombre de usuario de la sesión
-    print(UsersFrom.Meta)
+    usuarios = Users.objects.all()
     return render(request, "chat.html", {'username': username})
 
 

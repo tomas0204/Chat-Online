@@ -3,10 +3,11 @@ from django import forms
 # Create your models here.
 
 class Users(models.Model):
-    nombre = models.CharField(max_length=100)
+    username = models.CharField(max_length=100)
 
-class UsersFrom(forms.ModelForm):
+class UsersForm(forms.ModelForm):
+    username = forms.CharField(max_length=100, label='Username', widget=forms.TextInput(attrs={'autocomplete': 'off'}))
+
     class Meta:
         model = Users
-        fields = ["nombre"]
-
+        fields = ['username']

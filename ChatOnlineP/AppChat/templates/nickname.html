@@ -16,6 +16,7 @@
         <h4>Set a username to get started</h3>
         <form method="post" action="{% url 'nickname' %}">
             {% csrf_token %}
+            {{ form.as_p }}
            <div class="field">
               <div class="fas fa-envelope"></div>
               <input type="text" placeholder="Username" name="username"  autocomplete="off">
