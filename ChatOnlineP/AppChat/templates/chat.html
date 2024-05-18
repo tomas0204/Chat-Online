@@ -7,9 +7,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="{% static 'tailwindcss-colors.css' %}?=v10">
-  <link rel="stylesheet" type="text/css" href="{% static 'chat.css' %}?=v10">
-  <title>ChatOnline</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'tailwindcss-colors.css' %}?=v18">
+  <link rel="stylesheet" type="text/css" href="{% static 'chat.css' %}?=v18">
+  <title>{% block title %}Chat{% endblock %}</title>
 </head>
 
 <body>
@@ -45,15 +45,32 @@
         <!-- start: Content side -->
         <div class="content-sidebar">
           <div class="content-sidebar-title">Chats</div>
-          <form action="" class="content-sidebar-form">
-            <input type="search" class="content-sidebar-input" placeholder="Search...">
+          <form action="{% url 'search_users' %}" method="get" class="content-sidebar-form">
+            <input type="search" name="query" class="content-sidebar-input" placeholder="Search..." value="{{ query }}" autocomplete="off">
             <button type="submit" class="content-sidebar-submit"><i class="ri-search-line"></i></button>
           </form>
+          {% if query %}
+              <div id="search-results">
+                {% if users %}
+                    <ul class="user-list">
+                        {% for user in users %}
+                            <li class="user-item">
+                                <a href="{% url 'user_profile' user.username %}" class="user-link">{{ user.username }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    {% if query %}
+                        <div class="no-results">Sorry, no users found for "{{ query }}"</div>
+                    {% endif %}
+                {% endif %}
+              </div>
+          {% endif %}
           <div class="content-messages">
             <ul class="content-messages-list">
               <li class="content-message-title"><span>Recently</span></li>
               <li>
-                <a href="#" data-conversation="#conversation-1">
+                <!-- <a href="#" data-conversation="#conversation-1">
                   <img class="content-message-image"
                     src="https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
                     alt="">
@@ -65,11 +82,12 @@
                     <span class="content-message-unread">5</span>
                     <span class="content-message-time">12:30</span>
                   </span>
-                </a>
+                </a> -->
               </li>
             </ul>
           </div>
         </div>
+        
         <!-- end: Content side -->
         <!-- start: Conversation -->
         <div class="conversation conversation-default active">
@@ -94,7 +112,7 @@
               <button type="button"><i class="ri-information-line"></i></button>
             </div>
           </div>
-          <div class="conversation-main">
+          <!-- <div class="conversation-main">
             <ul class="conversation-wrapper">
               <div class="coversation-divider"><span>Today</span></div>
               <li class="conversation-item me">
@@ -263,15 +281,20 @@
                 </div>
               </li>
             </ul>
-          </div>
+          </div> -->
           <div class="conversation-form">
-            <button type="button" class="conversation-form-button"><i class="ri-emotion-line"></i></button>
-            <div class="conversation-form-group">
-              <textarea class="conversation-form-input" rows="1" placeholder="Type here..."></textarea>
-              <button type="button" class="conversation-form-record"><i class="ri-mic-line"></i></button>
-            </div>
-            <button type="button" class="conversation-form-button conversation-form-submit"><i
-                class="ri-send-plane-2-line"></i></button>
+              <button type="button" class="conversation-form-button"><i class="ri-emotion-line"></i></button>
+                <form method="post" class="form-chat-input">
+                  {% csrf_token %}
+                  <div class="conversation-form-group">
+                    {{ form.message }}    
+                    <textarea name="message" class="conversation-form-input" rows="1" placeholder="Type here..." 
+                    ></textarea>
+                    <!-- <button type="button" class="conversation-form-record"><i class="ri-mic-line"></i></button> -->
+                    <button type="submit" class="conversation-form-button conversation-form-submit"><i
+                      class="ri-send-plane-2-line"></i></button>
+                  </div>
+                </form>
           </div>
         </div>
         <div class="conversation" id="conversation-2">
