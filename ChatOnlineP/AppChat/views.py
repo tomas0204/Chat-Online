@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import render, redirect
-from .models import *
+from .models import Users
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 
@@ -22,20 +22,12 @@ def hellochat(request):
     usuarios = Users.objects.all()
     return render(request, "chat.html", {'username': username})
 
-def send_message(request):
-    if request.method == 'POST':
-        form = MessageForm(request.POST)
-        if form.is_valid():
-            form.save()  # Guardar el mensaje en la base de datos
-            return redirect('hellochat')  # Suponiendo que tienes una URL llamada 'chat'
-    else:
-        form = MessageForm()
-    return render(request, 'chat.html', {'form': form})
-
 def search_users(request):
+    username = request.session.get('username')
     query = request.GET.get('query', '')
     users = Users.objects.filter(username__icontains=query) if query else []
-    return render(request, 'chat.html', {'users': users, 'query': query})
+    print(query, users)
+    return render(request, 'chat.html', {'username': username,'users': users, 'query': query})
 
 def user_profile(request, username):
     user = get_object_or_404(Users, username=username)

@@ -21,7 +21,9 @@
               <div class="fas fa-envelope"></div>
               <input type="text" placeholder="Username" name="username"  autocomplete="off">
            </div>
-           
+            {% if error %}
+                <p style="color: red;">{{ error }}</p>
+            {% endif %}
            <button type="submit">Enter</button>  
         </form>
      </div>

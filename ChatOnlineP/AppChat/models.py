@@ -14,19 +14,3 @@ class UsersForm(forms.ModelForm):
     class Meta:
         model = Users
         fields = ['username']
-
-
-class Message(models.Model):
-    message = models.CharField(max_length=10000)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.message
-
-class MessageForm(forms.ModelForm):
-    class Meta:
-        model = Message
-        fields = ['message']
-        labels = {
-            'message': 'Message',
-        }

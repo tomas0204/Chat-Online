@@ -31,6 +31,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+
+    "daphne",
+    "channels",
+
     "AppLoginAndRegister",
     "AppChat",
     'django.contrib.admin',
@@ -40,6 +44,19 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
+
+ASGI_APPLICATION = 'ChatOnlineP.asgi.application'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -75,14 +92,21 @@ WSGI_APPLICATION = 'ChatOnlineP.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'ChatOnline',
+#         'USER': 'root',
+#         'PASSWORD': 'futbolmusica',
+#         'HOST': 'localhost',    
+#         'PORT': '3306',  # Puerto predeterminado de MySQL
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ChatOnline',
-        'USER': 'root',
-        'PASSWORD': 'futbolmusica',
-        'HOST': 'localhost',
-        'PORT': '3306',  # Puerto predeterminado de MySQL
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / "db.sqlite3",
     }
 }
 

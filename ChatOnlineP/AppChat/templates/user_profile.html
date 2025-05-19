@@ -13,6 +13,23 @@
 </head>
 
 <body>
+  <script>
+    const username = "Laura";  // Cambiá por Micaela en el otro
+    const to = "Micaela";      // Cambiá por Laura en el otro
+    const socket = new WebSocket(`ws://127.0.0.1:8000/ws/user/${username}/`);
+
+    socket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        console.log("Recibido:", data.message);
+    };
+
+    socket.onopen = function(e) {
+        socket.send(JSON.stringify({
+            'message': '¡Hola!',
+            'to': to
+        }));
+    };
+  </script>
   <!-- start: Chat -->
   <section class="chat-section">
     <div class="chat-container">
