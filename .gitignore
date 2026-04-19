@@ -1,0 +1,37 @@
+# 🐍 Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# 📦 Entorno virtual
+venv/
+env/
+ENV/
+
+# 🔐 Variables de entorno
+.env
+
+# 🗄️ Base de datos
+db.sqlite3
+
+# 📁 Archivos estáticos compilados
+staticfiles/
+
+# 📁 Media (uploads si usás)
+media/
+
+# 🧪 Testing / coverage
+.coverage
+htmlcov/
+
+# 🧠 IDEs / editores
+.vscode/
+.idea/
+
+# 🧾 Logs
+*.log
+
+# 🗂️ OS
+.DS_Store
+Thumbs.db
