@@ -17,21 +17,6 @@ body {
 /* end: Globals */
 
 
-body::-webkit-scrollbar {
-    width: 12px;
-}
-
-body::-webkit-scrollbar-thumb {
-    background-color: #ddd; /* Color de fondo del indicador de desplazamiento */
-    border-radius: 6px;
-}
-
-/* Estilo de la barra de desplazamiento en la página con tema oscuro */
-body.tema-oscuro::-webkit-scrollbar-thumb {
-    background-color: #121a2efa; /* Cambia el color del indicador en el tema oscuro */
-}
-
-
 
 /* start: Chat */
 .chat-section {
@@ -109,6 +94,7 @@ body.tema-oscuro::-webkit-scrollbar-thumb {
     font-size: 13px;
     padding: 6px 12px;
     background-color: rgba(0, 0, 0, .6);
+    color: var(--white);
     opacity: 0;
     visibility: hidden;
     transition: all .15s ease-in-out;
@@ -207,7 +193,6 @@ body.tema-oscuro::-webkit-scrollbar-thumb {
     padding: 0 16px;
 }
 .content-sidebar-input {
-    color: var(--black);
     padding: 8px 16px;
     background-color: var(--slate-100);
     border: 1px solid var(--slate-300);
@@ -217,45 +202,8 @@ body.tema-oscuro::-webkit-scrollbar-thumb {
     padding-right: 32px;
     font-size: 14px;
 }
-
-#search-results {
-    border-radius: 5px;
-    padding: 10px;
-    background-color: var(--white);
-    margin-top: 10px;
-}
-
-.search-results-header {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.user-list {
-    list-style-type: none;
-    padding: 0;
-}
-
-.user-item {
-    margin-bottom: 5px;
-}
-
-.user-link {
-    color: var(--black);
-    text-decoration: none;
-}
-
-.user-link:hover {
-    text-decoration: underline;
-}
-
-.no-results {
-    color: #d9534f;
-    font-style: italic;
-}
-
 .content-sidebar-input:focus {
     border-color: var(--slate-400);
-    color: var(--black);
 }
 .content-sidebar-submit {
     position: absolute;
@@ -470,6 +418,7 @@ body.tema-oscuro::-webkit-scrollbar-thumb {
     overflow-x: hidden;
     height: 100%;
     padding: 16px;
+    padding-top: 0px;
 }
 .conversation-wrapper {
     list-style-type: none;
@@ -512,8 +461,8 @@ body.tema-oscuro::-webkit-scrollbar-thumb {
 }
 .conversation-item-text {
     padding: 12px 16px 8px;
-    background-color: #1f305cfa;
-    box-shadow: 0 2px 12px -2px #1f305cfa;
+    background-color: var(--white);
+    box-shadow: 0 2px 12px -2px rgba(0, 0, 0, .1);
     font-size: 14px;
     border-radius: 6px;
     line-height: 1.5;
@@ -557,6 +506,7 @@ body.tema-oscuro::-webkit-scrollbar-thumb {
 }
 .conversation-item-dropdown-toggle {
     width: 24px;
+    color: aliceblue;
     height: 24px;
     display: flex;
     align-items: center;
@@ -650,30 +600,17 @@ body.tema-oscuro::-webkit-scrollbar-thumb {
     background-color: var(--white);
     display: flex;
     align-items: flex-end;
-    position: relative;
-    min-height: 91vh;
+    padding-bottom: 1%;
 }
-
-
 .conversation-form-group {
     width: 100%;
     position: relative;
     margin-left: 16px;
     margin-right: 16px;
 }
-
-.form-chat-input{
-    width: 100%;
-    position: relative;
-    margin-left: 16px;
-    margin-right: 16px;
-    
-}
-
 .conversation-form-input {
-    background-color: #1f305cfa;
-    color: var(--black);
-    border: 1px solid #1f305cfa;
+    background-color: var(--slate-100);
+    border: 1px solid var(--slate-300);
     border-radius: 4px;
     outline: transparent;
     padding: 10px 32px 10px 16px;

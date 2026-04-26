@@ -1,31 +1,45 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'nickname.css' %}?=v10">
-    <title>Document</title>
+    
+    <link rel="stylesheet" href="{% static 'nickname.css' %}?v=10">
+    
+    <title>Set Username</title>
 </head>
 <body>
-    <div class="login-form">
-        <div class="text">
-            Welcome👋
-        </div>
+    <main class="login-form">
+        
+        <header class="text">
+            Welcome 👋
+        </header>
+
         <h4>Set a username to get started</h4>
+
         <form method="post" action="{% url 'nickname' %}">
             {% csrf_token %}
+
             {{ form.as_p }}
-           <div class="field">
-              <div class="fas fa-envelope"></div>
-              <input type="text" placeholder="Username" name="username"  autocomplete="off">
-           </div>
+
+            <div class="field">
+                <input 
+                    type="text" 
+                    name="username" 
+                    placeholder="Username" 
+                    autocomplete="off" 
+                    required
+                >
+            </div>
+
             {% if error %}
-                <p style="color: red;">{{ error }}</p>
+                <p class="error">{{ error }}</p>
             {% endif %}
-           <button type="submit">Enter</button>  
+
+            <button type="submit">Enter</button>
         </form>
-     </div>
+
+    </main>
 </body>
 </html>
