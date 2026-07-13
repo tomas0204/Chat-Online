@@ -23,3 +23,31 @@ class ChatConsumer(AsyncWebsocketConsumer):
         print(f"✅ Connected to room: {self.room_name}")
 
         await self.accept()
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
+
+    # 📩 recibir mensaje desde JS
+    async def receive(self, text_data):
+        data = json.loads(text_data)
+        message = data['message']
+
+        # enviar al grupo
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'chat_message',
+                'message': message,
+                'sender': self.sender,
+            }
+        )
+
+    # 📤 enviar mensaje al frontend
+    async def chat_message(self, event):
+        await self.send(text_data=json.dumps({
+            'message': event['message'],
+            'sender': event['sender'],
+        }))

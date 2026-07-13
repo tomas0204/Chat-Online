@@ -31,6 +31,34 @@ document.querySelectorAll(".open-chat").forEach(item => {
   });
 });
 
+const input = document.querySelector(".conversation-form-input");
+const sendBtn = document.querySelector(".conversation-form-submit");
+
+sendBtn.addEventListener("click", function () {
+  const message = input.value.trim();
+
+  if (!message || !socket) return;
+
+  // enviar al backend
+  socket.send(JSON.stringify({
+    message: message,
+    to: currentReceiver
+  }));
+
+  // mostrar en tu chat
+  addMessage(message, "sent");
+
+  // limpiar input
+  input.value = "";
+});
+
+input.addEventListener("keypress", function (e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendBtn.click();
+  }
+});
+
 // start: Sidebar
 document.querySelector('.chat-sidebar-profile-toggle').addEventListener('click', function(e) {
     e.preventDefault()
