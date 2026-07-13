@@ -22,7 +22,6 @@ def nickname(request):
 # VIEW 1: Carga la página principal del chat con el username desde sesión
 def hellochat(request):
     username = request.session.get('username')
-    usuarios = Users.objects.all()
     return render(request, "chat.html", {'username': username})
 
 
@@ -37,5 +36,6 @@ def search_users(request):
 
 # VIEW 3: Muestra el perfil de un usuario específico según el username recibido
 def user_profile(request, username):
-    user = get_object_or_404(Users, username=username)
-    return render(request, 'user_profile.html', {'user': user})
+    receiver = get_object_or_404(Users, username=username)
+    username = request.session.get('username')
+    return render(request, 'user_profile.html', {'receiver': receiver, 'username': username})

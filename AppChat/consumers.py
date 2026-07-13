@@ -1,9 +1,17 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 
+    
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.room_name = self.scope["url_route"]["kwargs"]["username"]
+        sender = self.scope["url_route"]["kwargs"]["sender"]
+        receiver = self.scope["url_route"]["kwargs"]["receiver"]
+
+        print("USER:", self.scope["user"])
+        print("AUTH:", self.scope["user"].is_authenticated)
+        self.room_name = "_".join(sorted([sender, receiver]))
+
+        print("ROOM:", self.room_name)
         self.room_group_name = f"chat_{self.room_name}"
 
         # Unirse al grupo

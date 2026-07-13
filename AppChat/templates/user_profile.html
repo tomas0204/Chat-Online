@@ -7,33 +7,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="{% static 'tailwindcss-colors.css' %}?=v24">
-  <link rel="stylesheet" type="text/css" href="{% static 'chat.css' %}?=v24">
+  <link rel="stylesheet" type="text/css" href="{% static 'tailwindcss-colors.css' %}?=v25">
+  <link rel="stylesheet" type="text/css" href="{% static 'chat.css' %}?=v25">
   <title>{% block title %}Chat{% endblock %}</title>
 </head>
 
-<body>
-  <script>
-    const username = "Tomas";  // Cambiá por Micaela en el otro
-    const to = "Mateo";      // Cambiá por Laura en el otro
-    const socket = new WebSocket(`ws://127.0.0.1:8000/ws/user/${username}/`);
-
-    socket.onopen = function (e) {
-      console.log("WebSocket connection established.");
-    };
-
-    socket.onmessage = function (e) {
-      const data = JSON.parse(e.data);
-      console.log("Recibido:", data.message);
-    };
-
-    socket.onopen = function (e) {
-      socket.send(JSON.stringify({
-        'message': '¡Hola!',
-        'to': to
-      }));
-    };
-  </script>
+<body data-username="{{ username }}"> 
   <!-- start: Chat -->
   <section class="chat-section">
     <div class="chat-container">
@@ -77,7 +56,10 @@
             <ul class="user-list">
               {% for user in users %}
               <li class="user-item">
-                <a href="{% url 'user_profile' user.username %}" class="user-link">{{ user.username }}</a>
+                <a href="{% url 'user_profile' user.username %}" class="user-link"
+                  data-username="{{ user.username }}">
+                  {{ user.username }}
+                </a>
               </li>
               {% endfor %}
             </ul>
@@ -97,8 +79,8 @@
                   <img class="content-message-image"
                     src="https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
                     alt="">
-                  <span class="content-message-info">
-                    <span class="content-message-name">{{ user }} </span>
+                  <span class="content-message-info open-chat" data-username="{{ receiver.username }}">
+                    <span class="content-message-name">{{ receiver.username }} </span>
                     <span class="content-message-text"> </span>
                   </span>
                   <span class="content-message-more">
@@ -125,7 +107,7 @@
                 src="https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
                 alt="">
               <div>
-                <div class="conversation-user-name">{{ user.username }}</div>
+                <div class="conversation-user-name">{{ receiver.username }}</div>
                 <div class="conversation-user-status online">online</div>
               </div>
             </div>
@@ -298,7 +280,7 @@
               <button type="button"><i class="ri-information-line"></i></button>
             </div>
           </div>
-          
+
         </div>
         <!-- end: Conversation -->
       </div>
@@ -306,8 +288,7 @@
     </div>
   </section>
   <!-- end: Chat -->
-
-  <script src="{% static 'chat.js' %}?=v1"></script>
+  <script src="{% static 'chat.js' %}?=v2"></script>
 </body>
 
 </html>

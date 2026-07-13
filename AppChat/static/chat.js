@@ -1,3 +1,36 @@
+const currentUser = document.body.dataset.username;
+console.log("Usuario logueado:", currentUser);
+
+document.querySelectorAll(".open-chat").forEach(item => {
+  item.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    const receiver = this.dataset.username;
+    const sender = currentUser;
+
+    console.log("Quiero chatear con:", receiver);
+
+    // 🔥 Crear socket acá
+    const socket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${sender}/${receiver}/`);
+
+    console.log("Conectando:", sender, receiver);
+
+    socket.onopen = function () {
+      console.log("✅ WebSocket conectado");
+
+      socket.send(JSON.stringify({
+        message: "Hola!",
+        to: receiver
+      }));
+    };
+
+    socket.onmessage = function (e) {
+      const data = JSON.parse(e.data);
+      console.log("📩 Mensaje recibido:", data.message);
+    };
+  });
+});
+
 // start: Sidebar
 document.querySelector('.chat-sidebar-profile-toggle').addEventListener('click', function(e) {
     e.preventDefault()
