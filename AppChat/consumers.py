@@ -6,13 +6,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         sender = self.scope["url_route"]["kwargs"]["sender"]
         receiver = self.scope["url_route"]["kwargs"]["receiver"]
-
-        print("USER:", self.scope["user"])
-        print("AUTH:", self.scope["user"].is_authenticated)
         self.room_name = "_".join(sorted([sender, receiver]))
-
-        print("ROOM:", self.room_name)
-        self.room_group_name = f"chat_{self.room_name}"
+        self.room_group_name = f"chat_{self.room_name}" 
 
         # Unirse al grupo
         await self.channel_layer.group_add(
@@ -34,6 +29,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         message = data['message']
+        sender = self.scope["url_route"]["kwargs"]["sender"]
 
         # enviar al grupo
         await self.channel_layer.group_send(
@@ -41,12 +37,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
             {
                 'type': 'chat_message',
                 'message': message,
-                'sender': self.scope["user"].username,
+                'sender': sender,
             }
         )
+        print(f"📩 Mensaje enviado al grupo {self.room_group_name}: {message} de {self.scope['user'].username}")
 
     # 📤 enviar mensaje al frontend
     async def chat_message(self, event):
+        print(f"📩 Mensaje recibido en el grupo {self.room_group_name}: {event['message']} de {event['sender']}")
         await self.send(text_data=json.dumps({
             'message': event['message'],
             'sender': event['sender'],

@@ -29,27 +29,21 @@ function addMessage(message, type) {
 
     side.appendChild(img);
 
-
     // Contenido
     const content = document.createElement("div");
     content.classList.add("conversation-item-content");
 
-
     const wrapper = document.createElement("div");
     wrapper.classList.add("conversation-item-wrapper");
-
 
     const box = document.createElement("div");
     box.classList.add("conversation-item-box");
 
-
     const text = document.createElement("div");
     text.classList.add("conversation-item-text");
 
-
     const p = document.createElement("p");
-    p.textContent = message; // 🔥 seguro contra XSS
-
+    p.textContent = message;
 
     const time = document.createElement("div");
     time.classList.add("conversation-item-time");
@@ -58,11 +52,44 @@ function addMessage(message, type) {
         minute: "2-digit"
     });
 
+    // 🔽 DROPDOWN
+    const dropdown = document.createElement("div");
+    dropdown.classList.add("conversation-item-dropdown");
 
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.classList.add("conversation-item-dropdown-toggle");
+    btn.innerHTML = '<i class="ri-more-2-line"></i>';
+
+    const ul = document.createElement("ul");
+    ul.classList.add("conversation-item-dropdown-list");
+
+    const liForward = document.createElement("li");
+    const aForward = document.createElement("a");
+    aForward.href = "#";
+    aForward.innerHTML = '<i class="ri-share-forward-line"></i> Forward';
+
+    const liDelete = document.createElement("li");
+    const aDelete = document.createElement("a");
+    aDelete.href = "#";
+    aDelete.innerHTML = '<i class="ri-delete-bin-line"></i> Delete';
+
+    liForward.appendChild(aForward);
+    liDelete.appendChild(aDelete);
+
+    ul.appendChild(liForward);
+    ul.appendChild(liDelete);
+
+    dropdown.appendChild(btn);
+    dropdown.appendChild(ul);
+
+    // 📦 Estructura final
     text.appendChild(p);
     text.appendChild(time);
 
     box.appendChild(text);
+    box.appendChild(dropdown); // 🔥 acá agregás el dropdown
+
     wrapper.appendChild(box);
     content.appendChild(wrapper);
 
@@ -73,17 +100,25 @@ function addMessage(message, type) {
 
     container.scrollTop = container.scrollHeight;
 }
+document.addEventListener("click", function (e) {
+    if (e.target.closest(".conversation-item-dropdown-toggle")) {
+        const dropdown = e.target.closest(".conversation-item-dropdown");
+        dropdown.classList.toggle("active");
+    } else {
+        document.querySelectorAll(".conversation-item-dropdown").forEach(d => {
+            d.classList.remove("active");
+        });
+    }
+});
 
 document.querySelectorAll(".open-chat").forEach(item => {
     item.addEventListener("click", function (e) {
         e.preventDefault();
 
-        const receiver = this.dataset.username;
+        let receiver = this.dataset.username;
         const sender = currentUser;
 
         currentReceiver = receiver; // 🔥 guardar receptor
-
-        console.log("Quiero chatear con:", receiver);
 
         // 🔴 cerrar conexión anterior
         if (socket) {
@@ -92,7 +127,7 @@ document.querySelectorAll(".open-chat").forEach(item => {
 
         socket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${sender}/${receiver}/`);
 
-        console.log("Conectando:", sender, receiver);
+        console.log("Sender:", sender, "Receiver:", receiver);
 
         socket.onopen = function () {
             console.log("✅ WebSocket conectado");
@@ -101,11 +136,8 @@ document.querySelectorAll(".open-chat").forEach(item => {
         socket.onmessage = function (e) {
             const data = JSON.parse(e.data);
 
-            if (data.sender === currentUser) {
-                addMessage(data.message, "sent");
-            } else {
-                addMessage(data.message, "received");
-            }
+            const isMe = data.sender.trim().toLowerCase() === currentUser.trim().toLowerCase();
+            addMessage(data.message, isMe ? "received" : "sent");
         };
     });
 });

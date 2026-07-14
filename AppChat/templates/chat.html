@@ -54,12 +54,24 @@
             <button type="submit" class="content-sidebar-submit"><i class="ri-search-line"></i></button>
           </form>
           {% if query %}
-              <div id="search-results">
+              <div class="">
                 {% if users %}
-                    <ul class="user-list">
+                    <ul class="content-messages-list">
                         {% for user in users %}
-                            <li class="user-item">
-                                <a href="{% url 'user_profile' user.username %}" class="user-link">{{ user.username }}</a>
+                            <li class="#conversation-1">
+                                <a href="{% url 'user_profile' user.username %}" class="user-link">
+                                  <img class="content-message-image"
+                                  src="https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
+                                  alt="">
+                                <span class="content-message-info open-chat" data-username="{{ user.username }}">
+                                  <span class="content-message-name">{{ user.username }} </span>
+                                  <span class="content-message-text"> </span>
+                                </span>
+                                <span class="content-message-more">
+                                  <span class="content-message-unread">5</span>
+                                  <span class="content-message-time">12:30</span>
+                                </span>
+                                </a>
                             </li>
                         {% endfor %}
                     </ul>
