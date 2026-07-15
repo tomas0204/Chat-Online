@@ -10,6 +10,7 @@ function openChat(receiver) {
     const sender = currentUser;
 
     currentReceiver = receiver;
+    document.getElementById("chat-username-open").textContent = receiver;
 
     // cerrar anterior
     if (socket) {
