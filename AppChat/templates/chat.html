@@ -12,11 +12,7 @@
   <title>{% block title %}Chat{% endblock %}</title>
 </head>
 
-<body>
-  <script>
-    const currentUser = "{{ username }}"; // usuario logueado
-    console.log("Usuario logueado:", currentUser);
-  </script>
+<body data-username="{{ username }}">
   <!-- start: Chat -->
   <section class="chat-section">
     <div class="chat-container">
@@ -32,8 +28,7 @@
           <li><a href="#" data-title="Settings"><i class="ri-settings-line"></i></a></li>
           <li class="chat-sidebar-profile">
             <button type="button" class="chat-sidebar-profile-toggle">
-              <img
-                src="https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
+              <img src="https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
                 alt="">
             </button>
             <ul class="chat-sidebar-profile-dropdown">
@@ -50,53 +45,68 @@
         <div class="content-sidebar">
           <div class="content-sidebar-title">Chats</div>
           <form action="{% url 'search_users' %}" method="get" class="content-sidebar-form">
-            <input type="search" name="query" class="content-sidebar-input" placeholder="Search..." value="{{ query }}" autocomplete="off">
+            <input type="search" name="query" class="content-sidebar-input" placeholder="Search..." value="{{ query }}"
+              autocomplete="off">
             <button type="submit" class="content-sidebar-submit"><i class="ri-search-line"></i></button>
           </form>
           {% if query %}
-              <div class="">
-                {% if users %}
-                    <ul class="content-messages-list">
-                        {% for user in users %}
-                            <li class="#conversation-1">
-                                <a href="{% url 'user_profile' user.username %}" class="user-link">
-                                  <img class="content-message-image"
-                                  src="https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
-                                  alt="">
-                                <span class="content-message-info open-chat" data-username="{{ user.username }}">
-                                  <span class="content-message-name">{{ user.username }} </span>
-                                  <span class="content-message-text"> </span>
-                                </span>
-                                <span class="content-message-more">
-                                  <span class="content-message-unread">5</span>
-                                  <span class="content-message-time">12:30</span>
-                                </span>
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    {% if query %}
-                        <div class="no-results">Sorry, no users found for "{{ query }}"</div>
-                    {% endif %}
-                {% endif %}
-              </div>
+          <div class="">
+            {% if users %}
+            <ul class="content-messages-list">
+              {% for user in users %}
+              <li class="#conversation-1">
+                <a href="#" class="user-link open-chat" data-username="{{ user.username }}">
+                  <img class="content-message-image"
+                    src="https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
+                    alt="">
+                  <span class="content-message-info open-chat" data-username="{{ user.username }}">
+                    <span class="content-message-name">{{ user.username }} </span>
+                    <span class="content-message-text"> </span>
+                  </span>
+                  <span class="content-message-more">
+                    <span class="content-message-unread">5</span>
+                    <span class="content-message-time">12:30</span>
+                  </span>
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
+            {% else %}
+            {% if query %}
+            <div class="no-results">Sorry, no users found for "{{ query }}"</div>
+            {% endif %}
+            {% endif %}
+          </div>
           {% endif %}
           <div class="content-messages">
             <ul class="content-messages-list">
-              <li class="content-message-title"><span>Recently</span></li>
-              <li>
-                
-              </li>
+              <ul class="content-messages-list" id="#recent-messages">
+                <li class="content-message-title"><span>Recently</span></li>
+                <li>
+                  <a class="open-chat" data-conversation="#conversation-1" data-username="{{ receiver.username }}">
+                    <img class="content-message-image"
+                      src="https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
+                      alt="">
+                    <span class="content-message-info ">
+                      <span class="content-message-name">{{ receiver.username }} </span>
+                      <span class="content-message-text"> </span>
+                    </span>
+                    <span class="content-message-more">
+                      <span class="content-message-unread">5</span>
+                      <span class="content-message-time">12:30</span>
+                    </span>
+                  </a>
+                </li>
+              </ul>
             </ul>
           </div>
         </div>
-        
+
         <!-- end: Content side -->
         <!-- start: Conversation -->
         <div class="conversation conversation-default active">
           <i class="ri-chat-3-line"></i>
-          <p> Hi {{ username  }} select chat and view conversation!</p>
+          <p> Hi {{ username }} select chat and view conversation!</p>
         </div>
         <div class="conversation" id="conversation-1">
           <div class="conversation-top">
@@ -106,7 +116,7 @@
                 src="https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
                 alt="">
               <div>
-                <div class="conversation-user-name">Usuario</div>
+                <div class="conversation-user-name">{{ receiver.username }}</div>
                 <div class="conversation-user-status online">online</div>
               </div>
             </div>
@@ -116,19 +126,20 @@
               <button type="button"><i class="ri-information-line"></i></button>
             </div>
           </div>
+          <div class="conversation-main">
+            <ul class="conversation-wrapper">
+              <div class="coversation-divider"><span>Today</span></div>
+              
+            </ul>
+          </div>
           <div class="conversation-form">
-              <button type="button" class="conversation-form-button"><i class="ri-emotion-line"></i></button>
-                <form method="post" class="form-chat-input">
-                  {% csrf_token %}
-                  <div class="conversation-form-group">
-                    {{ form.message }}    
-                    <textarea name="message" class="conversation-form-input" rows="1" placeholder="Type here..." 
-                    ></textarea>
-                    <!-- <button type="button" class="conversation-form-record"><i class="ri-mic-line"></i></button> -->
-                    <button type="submit" class="conversation-form-button conversation-form-submit"><i
-                      class="ri-send-plane-2-line"></i></button>
-                  </div>
-                </form>
+            <button type="button" class="conversation-form-button"><i class="ri-emotion-line"></i></button>
+            <div class="conversation-form-group">
+              <textarea class="conversation-form-input" rows="1" placeholder="Type here..."></textarea>
+              <button type="button" class="conversation-form-record"><i class="ri-mic-line"></i></button>
+            </div>
+            <button type="button" class="conversation-form-button conversation-form-submit"><i
+                class="ri-send-plane-2-line"></i></button>
           </div>
         </div>
         <div class="conversation" id="conversation-2">
@@ -149,7 +160,7 @@
               <button type="button"><i class="ri-information-line"></i></button>
             </div>
           </div>
-          
+
         </div>
         <!-- end: Conversation -->
       </div>
@@ -158,7 +169,7 @@
   </section>
   <!-- end: Chat -->
 
-  <script src="{% static 'chat.js' %}?=v1"></script>
+  <script src="{% static 'chat.js' %}?=v5"></script>
 </body>
 
 </html>
