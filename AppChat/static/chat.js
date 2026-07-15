@@ -1,10 +1,32 @@
 const currentUser = document.body.dataset.username;
-const recentMessagesContainer = document.getElementById("#recent-messages");
+const recentMessagesContainer = document.getElementById("recent-messages");
 const input = document.querySelector(".conversation-form-input");
 const sendBtn = document.querySelector(".conversation-form-submit");
 console.log("Usuario logueado:", currentUser);
 let socket = null;
 let currentReceiver = null;
+
+function openChat(receiver) {
+    const sender = currentUser;
+
+    currentReceiver = receiver;
+
+    // cerrar anterior
+    if (socket) {
+        socket.close();
+    }
+
+    // abrir nuevo
+    socket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${sender}/${receiver}/`);
+
+    socket.onopen = () => console.log("✅ conectado");
+
+    socket.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+        const isMe = data.sender === currentUser;
+        addMessage(data.message, isMe ? "received" : "sent");
+    };
+}
 
 function addToRecent(username) {
     // evitar duplicados
@@ -22,8 +44,7 @@ function addToRecent(username) {
     // <a>
     const a = document.createElement("a");
     a.classList.add("open-chat");
-    a.classList.add("content-message-item");
-    a.dataset.conversation = "#conversation-1"; // igual que tu HTML
+    a.dataset.conversation = "#conversation-1";
     a.dataset.username = username;
     a.href = "#";
 
@@ -196,35 +217,16 @@ document.querySelectorAll(".open-chat").forEach(item => {
 
         let receiver = this.dataset.username;
 
-        console.log("💌 Receptor seleccionado:", receiver);
-        const sender = currentUser;
-
-        currentReceiver = receiver; // 🔥 guardar receptor
-
-        // 🔴 cerrar conexión anterior
-        if (socket) {
-            socket.close();
+        if (!receiver) {
+            console.error("❌ No se encontró el receptor");
+            return;
         }
-
-        socket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${sender}/${receiver}/`);
-
-        console.log("Sender:", sender, "Receiver:", receiver);
-
-        socket.onopen = function () {
-            console.log("✅ WebSocket conectado");
-        };
-
-        socket.onmessage = function (e) {
-            const data = JSON.parse(e.data);
-
-            const isMe = data.sender.trim().toLowerCase() === currentUser.trim().toLowerCase();
-            addMessage(data.message, isMe ? "received" : "sent");
-        };
+        openChat(receiver);
     });
 });
 
 document.addEventListener("click", function(e) {
-    const el = e.target.closest(".open-chat");
+    const el = e.target.closest(".agree-chat");
     if (!el) return;
 
     e.preventDefault();
@@ -232,6 +234,7 @@ document.addEventListener("click", function(e) {
     const username = el.dataset.username;
 
     addToRecent(username);
+    openChat(username);
 });
 
 sendBtn.addEventListener("click", function () {
@@ -301,15 +304,21 @@ document.querySelectorAll('.conversation-form-input').forEach(function (item) {
     })
 })
 
-document.querySelectorAll('[data-conversation]').forEach(function (item) {
-    item.addEventListener('click', function (e) {
-        e.preventDefault()
-        document.querySelectorAll('.conversation').forEach(function (i) {
-            i.classList.remove('active')
-        })
-        document.querySelector(this.dataset.conversation).classList.add('active')
-    })
-})
+document.addEventListener("click", function(e) {
+    const item = e.target.closest("[data-conversation]");
+    if (!item) return;
+
+    e.preventDefault();
+
+    document.querySelectorAll('.conversation').forEach(function (i) {
+        i.classList.remove('active');
+    });
+
+    const target = document.querySelector(item.dataset.conversation);
+    if (target) {
+        target.classList.add('active');
+    }
+});
 
 document.querySelectorAll('.conversation-back').forEach(function (item) {
     item.addEventListener('click', function (e) {

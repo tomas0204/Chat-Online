@@ -53,9 +53,10 @@
           <div class="">
             {% if users %}
             <ul class="content-messages-list">
+              <li class="content-message-title"><span>Search Results</span></li>
               {% for user in users %}
               <li class="#conversation-1">
-                <a href="#" class="user-link open-chat" data-username="{{ user.username }}">
+                <a href="#" class="user-link agree-chat" data-username="{{ user.username }}">
                   <img class="content-message-image"
                     src="https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
                     alt="">
@@ -80,23 +81,9 @@
           {% endif %}
           <div class="content-messages">
             <ul class="content-messages-list">
-              <ul class="content-messages-list" id="#recent-messages">
+              <ul class="content-messages-list" id="recent-messages">
                 <li class="content-message-title"><span>Recently</span></li>
-                <li>
-                  <a class="open-chat" data-conversation="#conversation-1" data-username="{{ receiver.username }}">
-                    <img class="content-message-image"
-                      src="https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
-                      alt="">
-                    <span class="content-message-info ">
-                      <span class="content-message-name">{{ receiver.username }} </span>
-                      <span class="content-message-text"> </span>
-                    </span>
-                    <span class="content-message-more">
-                      <span class="content-message-unread">5</span>
-                      <span class="content-message-time">12:30</span>
-                    </span>
-                  </a>
-                </li>
+                
               </ul>
             </ul>
           </div>
