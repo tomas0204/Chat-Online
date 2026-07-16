@@ -94,9 +94,9 @@ body {
     font-size: 13px;
     padding: 6px 12px;
     background-color: rgba(0, 0, 0, .6);
-    color: var(--white);
     opacity: 0;
     visibility: hidden;
+    color: white;
     transition: all .15s ease-in-out;
 }
 .chat-sidebar-menu > * > a:hover::before {
@@ -196,6 +196,7 @@ body {
     padding: 8px 16px;
     background-color: var(--slate-100);
     border: 1px solid var(--slate-300);
+    color: white;
     outline: none;
     width: 100%;
     border-radius: 4px;
@@ -621,6 +622,7 @@ body {
     display: block;
     line-height: 1.5;
     max-height: calc(20px + ((14px * 2) * 6));
+    color: white;   
 }
 .conversation-form-input:focus {
     border-color: var(--slate-400);
