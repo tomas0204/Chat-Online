@@ -1,6 +1,27 @@
 import { addToRecent } from "./sidebar.js";
-import { input, sendBtn, socket, currentReceiver, currentUser } from "./state.js";
+import { input, sendBtn, socket, currentReceiver, currentUser, getEmojiElements } from "./state.js";
 import { openChat } from "./socket.js";
+
+console.log(" EVENTS JS CARGADO ");
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("EVENTS DOM listo");
+
+  getEmojiElements().btn.addEventListener("click", () => {
+    const picker = getEmojiElements().picker;
+    picker.style.display = picker.style.display === "none" ? "block" : "none";
+  });
+
+  getEmojiElements().picker.addEventListener("emoji-click", (event) => {
+    const emoji = event.detail.unicode;
+    getEmojiElements().inputEmoji.value += emoji;
+  });
+
+  console.log("btn:", getEmojiElements().btn);
+  console.log("picker:", getEmojiElements().picker);
+});
 
 document.addEventListener("click", function (e) {
     if (e.target.closest(".conversation-item-dropdown-toggle")) {

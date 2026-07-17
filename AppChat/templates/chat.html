@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="{% static 'tailwindcss-colors.css' %}?=v19">
-  <link rel="stylesheet" type="text/css" href="{% static 'chat.css' %}?=v22">
+  <link rel="stylesheet" type="text/css" href="{% static 'chat.css' %}?=v23">
   <title>{% block title %}Chat{% endblock %}</title>
 </head>
 
@@ -83,7 +83,7 @@
             <ul class="content-messages-list">
               <ul class="content-messages-list" id="recent-messages">
                 <li class="content-message-title"><span>Recently</span></li>
-                
+
               </ul>
             </ul>
           </div>
@@ -116,16 +116,21 @@
           <div class="conversation-main">
             <ul class="conversation-wrapper">
               <div class="coversation-divider"><span>Today</span></div>
-              
+
             </ul>
           </div>
           <div class="conversation-form">
-            <button type="button" class="conversation-form-button"><i class="ri-emotion-line"></i></button>
+            <button id="emoji-btn" type="button" class="conversation-form-button">
+              <i class="ri-emotion-line"></i>
+            </button>
+
+            <emoji-picker id="emoji-picker" style="display:none;"></emoji-picker>
+
             <div class="conversation-form-group">
-              <textarea class="conversation-form-input" rows="1" placeholder="Type here..."></textarea>
+              <textarea id="message-input" class="conversation-form-input" rows="1" placeholder="Type here..."></textarea>
               <button type="button" class="conversation-form-record"><i class="ri-mic-line"></i></button>
             </div>
-            <button type="button" class="conversation-form-button conversation-form-submit"><i
+            <button id="send-btn" type="button" class="conversation-form-button conversation-form-submit"><i
                 class="ri-send-plane-2-line"></i></button>
           </div>
         </div>
@@ -156,7 +161,7 @@
   </section>
   <!-- end: Chat -->
 
-  <script type="module" src="{% static 'js/main.js' %}?v=4"></script>
+  <script type="module" src="{% static 'js/main.js' %}?v=8"></script>
 </body>
 
 </html>

@@ -191,6 +191,7 @@ body {
 .content-sidebar-form {
     position: relative;
     padding: 0 16px;
+    margin-bottom: 15px;
 }
 .content-sidebar-input {
     padding: 8px 16px;
@@ -224,7 +225,6 @@ body {
 .content-messages {
     overflow-y: auto;
     height: 100%;
-    margin-top: 16px;
 }
 .content-messages-list {
     list-style-type: none;
