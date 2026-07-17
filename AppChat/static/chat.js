@@ -44,7 +44,7 @@ function addToRecent(username) {
 
     // <a>
     const a = document.createElement("a");
-    a.classList.add("open-chat");
+    a.classList.add("agree-chat");
     a.dataset.conversation = "#conversation-1";
     a.dataset.username = username;
     a.href = "#";
@@ -99,7 +99,7 @@ function addToRecent(username) {
     a.appendChild(more);
 
     li.appendChild(a);
-
+    openChat(username);
     // insertar debajo del título
     recentMessagesContainer.insertBefore(li, recentMessagesContainer.children[1]);
 }
@@ -310,7 +310,7 @@ document.addEventListener("click", function(e) {
     if (!item) return;
 
     e.preventDefault();
-
+    openChat(item.dataset.username);
     document.querySelectorAll('.conversation').forEach(function (i) {
         i.classList.remove('active');
     });

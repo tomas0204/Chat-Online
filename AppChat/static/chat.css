@@ -447,7 +447,7 @@ body {
     display: block;
 }
 .conversation-item-content {
-    width: 100%;
+    width: auto;
 }
 .conversation-item-wrapper:not(:last-child) {
     margin-bottom: 8px;
