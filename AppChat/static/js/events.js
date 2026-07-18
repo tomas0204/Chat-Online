@@ -1,27 +1,10 @@
+import 'https://cdn.jsdelivr.net/npm/emoji-picker-element@1.18.3/index.js';
 import { addToRecent } from "./sidebar.js";
-import { input, sendBtn, socket, currentReceiver, currentUser, getEmojiElements } from "./state.js";
+import {
+    input, sendBtn, socket, currentReceiver, currentUser, getEmojiElements,
+    getRecordButton
+} from "./state.js";
 import { openChat } from "./socket.js";
-
-console.log(" EVENTS JS CARGADO ");
-
-
-
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("EVENTS DOM listo");
-
-  getEmojiElements().btn.addEventListener("click", () => {
-    const picker = getEmojiElements().picker;
-    picker.style.display = picker.style.display === "none" ? "block" : "none";
-  });
-
-  getEmojiElements().picker.addEventListener("emoji-click", (event) => {
-    const emoji = event.detail.unicode;
-    getEmojiElements().inputEmoji.value += emoji;
-  });
-
-  console.log("btn:", getEmojiElements().btn);
-  console.log("picker:", getEmojiElements().picker);
-});
 
 document.addEventListener("click", function (e) {
     if (e.target.closest(".conversation-item-dropdown-toggle")) {
@@ -48,7 +31,7 @@ document.querySelectorAll(".open-chat").forEach(item => {
     });
 });
 
-document.addEventListener("click", function(e) {
+document.addEventListener("click", function (e) {
     const el = e.target.closest(".agree-chat");
     if (!el) return;
 
@@ -127,7 +110,7 @@ document.querySelectorAll('.conversation-form-input').forEach(function (item) {
     })
 })
 
-document.addEventListener("click", function(e) {
+document.addEventListener("click", function (e) {
     const item = e.target.closest("[data-conversation]");
     if (!item) return;
 
@@ -150,3 +133,67 @@ document.querySelectorAll('.conversation-back').forEach(function (item) {
         document.querySelector('.conversation-default').classList.add('active')
     })
 })
+
+//EMOJIS
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("EVENTS DOM listo");
+
+    getEmojiElements().btn.addEventListener("click", () => {
+        const picker = getEmojiElements().picker;
+        picker.style.display = picker.style.display === "none" ? "block" : "none";
+    });
+
+    getEmojiElements().picker.addEventListener("emoji-click", (event) => {
+        const emoji = event.detail.unicode;
+        getEmojiElements().inputEmoji.value += emoji;
+    });
+
+    console.log("btn:", getEmojiElements().btn);
+    console.log("picker:", getEmojiElements().picker);
+});
+
+//RECORD
+let mediaRecorder;
+let audioChunks = [];
+getRecordButton().addEventListener("click", async () => {
+
+    // 👉 iniciar grabación
+    if (!mediaRecorder || mediaRecorder.state === "inactive") {
+
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        mediaRecorder = new MediaRecorder(stream);
+
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = e => {
+            if (e.data.size > 0) {
+                audioChunks.push(e.data);
+            }
+        };
+
+        mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+            audioChunks = [];
+
+            const audioURL = URL.createObjectURL(audioBlob);
+
+            const audio = document.createElement("audio");
+            audio.src = audioURL;
+            audio.controls = true;
+
+            document.body.appendChild(audio);
+
+            console.log("🎧 audio creado correctamente:", audioBlob);
+        };
+
+        mediaRecorder.start();
+        console.log("🎙️ grabando...");
+    }
+
+    // 👉 detener grabación
+    else {
+        mediaRecorder.stop();
+        console.log("⏹️ grabación detenida...");
+    }
+});
