@@ -28,24 +28,28 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # 📩 recibir mensaje desde JS
     async def receive(self, text_data):
         data = json.loads(text_data)
-        message = data['message']
+
+        msg_type = data.get("type", "text")  # default texto
         sender = self.scope["url_route"]["kwargs"]["sender"]
 
-        # enviar al grupo
         await self.channel_layer.group_send(
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'message': message,
+                'data': data,  
                 'sender': sender,
+                'msg_type': msg_type,
+                "audio_url": data.get("audio_url"),
             }
         )
-        print(f"📩 Mensaje enviado al grupo {self.room_group_name}: {message} de {self.scope['user'].username}")
+        print(f"📩 Mensaje enviado al grupo {self.room_group_name}: {data.get('message')} de {self.scope['user'].username}")
 
     # 📤 enviar mensaje al frontend
     async def chat_message(self, event):
-        print(f"📩 Mensaje recibido en el grupo {self.room_group_name}: {event['message']} de {event['sender']}")
+        print(f"📩 Mensaje recibido en el grupo {self.room_group_name}: {event['data'].get('message')} de {event['sender']}")
         await self.send(text_data=json.dumps({
-            'message': event['message'],
+            'message': event['data'].get('message'),
             'sender': event['sender'],
+            'msg_type': event['msg_type'],
+            "audio_url": event['data'].get('audio_url', None)  
         }))

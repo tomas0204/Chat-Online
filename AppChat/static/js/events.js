@@ -52,6 +52,7 @@ sendBtn.addEventListener("click", function () {
     }
 
     socket.send(JSON.stringify({
+        type: "text",
         message: message,
         to: currentReceiver
     }));
@@ -172,19 +173,38 @@ getRecordButton().addEventListener("click", async () => {
             }
         };
 
-        mediaRecorder.onstop = () => {
+        mediaRecorder.onstop = async () => {
             const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
             audioChunks = [];
 
-            const audioURL = URL.createObjectURL(audioBlob);
+            // enviar al backend
+            const formData = new FormData();
+            formData.append("audio", audioBlob, "audio.webm");
 
-            const audio = document.createElement("audio");
-            audio.src = audioURL;
-            audio.controls = true;
+            const response = await fetch("/upload-audio/", {
+                method: "POST",
+                body: formData
+            });
 
-            document.body.appendChild(audio);
+            // ⚠️ importante para debug
+            if (!response.ok) {
+                console.error("Error en upload:", await response.text());
+                return;
+            }
 
-            console.log("🎧 audio creado correctamente:", audioBlob);
+            const data = await response.json();
+
+            console.log("URL del audio:", data.url);
+
+            // ✅ AHORA sí mandás por WebSocket
+            socket.send(JSON.stringify({
+                type: "audio",
+                message: "Audio enviado",
+                audio_url: data.url,
+                to: currentReceiver
+            }));
+
+            console.log("🎧 audio enviado correctamente");
         };
 
         mediaRecorder.start();
@@ -196,4 +216,20 @@ getRecordButton().addEventListener("click", async () => {
         mediaRecorder.stop();
         console.log("⏹️ grabación detenida...");
     }
+});
+
+audio.addEventListener("loadedmetadata", () => {
+    const mins = Math.floor(audio.duration / 60);
+    const secs = Math.floor(audio.duration % 60)
+        .toString()
+        .padStart(2, "0");
+
+    time.textContent = `0:00 / ${mins}:${secs}`;
+});
+
+audio.addEventListener("timeupdate", () => {
+    if (!audio.duration) return;
+
+    const percent = (audio.currentTime / audio.duration) * 100;
+    progressBar.style.width = percent + "%";
 });

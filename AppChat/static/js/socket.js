@@ -1,5 +1,5 @@
 import { socket, currentReceiver, currentUser, setSocket, setCurrentReceiver } from './state.js';
-import { addMessage } from './chatUI.js';
+import { addMessage, addAudioMessage } from './chatUI.js';
 
 export function openChat(receiver) {
     const sender = currentUser;
@@ -21,6 +21,13 @@ export function openChat(receiver) {
     newSocket.onmessage = (e) => {
         const data = JSON.parse(e.data);
         const isMe = data.sender === currentUser;
-        addMessage(data.message, isMe ? "received" : "sent");
+        console.log("📩 Mensaje recibido:", data);
+        if (data.msg_type === "text") {
+            addMessage(data.message, isMe ? "received" : "sent");
+        }
+
+        if (data.msg_type === "audio") {
+            addAudioMessage(data.audio_url, isMe ? "received" : "sent");
+        }
     };
 }
