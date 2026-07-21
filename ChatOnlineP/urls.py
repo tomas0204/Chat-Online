@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.urls import path
 from AppChat.views import *
-
+from ChatOnlineP import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("",nickname, name="nickname"),
@@ -11,4 +12,5 @@ urlpatterns = [
     # path("users",searchuser, name="searchuser")
     path("users", search_users, name="search_users"),
     path("user/<str:username>/", user_profile, name="user_profile"),
-]
+    path("upload-audio/", upload_audio),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -94,9 +94,9 @@ body {
     font-size: 13px;
     padding: 6px 12px;
     background-color: rgba(0, 0, 0, .6);
-    color: var(--white);
     opacity: 0;
     visibility: hidden;
+    color: white;
     transition: all .15s ease-in-out;
 }
 .chat-sidebar-menu > * > a:hover::before {
@@ -191,11 +191,13 @@ body {
 .content-sidebar-form {
     position: relative;
     padding: 0 16px;
+    margin-bottom: 15px;
 }
 .content-sidebar-input {
     padding: 8px 16px;
     background-color: var(--slate-100);
     border: 1px solid var(--slate-300);
+    color: white;
     outline: none;
     width: 100%;
     border-radius: 4px;
@@ -223,8 +225,47 @@ body {
 .content-messages {
     overflow-y: auto;
     height: 100%;
-    margin-top: 16px;
 }
+.audio-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 200px; /* 🔥 importante */
+}
+
+.audio-play {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+}
+
+.audio-progress {
+    flex: 1;
+    height: 6px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.audio-progress-bar {
+    height: 100%;
+    width: 0%;
+    background:#2563eb;
+}
+
+.me .audio-progress {
+    background: rgba(255,255,255,0.3);
+}
+
+.audio-progress-bar {
+    transition: width 0.1s linear;
+}
+
 .content-messages-list {
     list-style-type: none;
     padding: 8px 0;
@@ -446,7 +487,7 @@ body {
     display: block;
 }
 .conversation-item-content {
-    width: 100%;
+    width: auto;
 }
 .conversation-item-wrapper:not(:last-child) {
     margin-bottom: 8px;
@@ -462,7 +503,7 @@ body {
 .conversation-item-text {
     padding: 12px 16px 8px;
     background-color: var(--white);
-    box-shadow: 0 2px 12px -2px rgba(0, 0, 0, .1);
+    box-shadow: 0 2px 12px -2px rgba(0, 0, 0, 0.452);
     font-size: 14px;
     border-radius: 6px;
     line-height: 1.5;
@@ -621,6 +662,7 @@ body {
     display: block;
     line-height: 1.5;
     max-height: calc(20px + ((14px * 2) * 6));
+    color: white;   
 }
 .conversation-form-input:focus {
     border-color: var(--slate-400);

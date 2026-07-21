@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.shortcuts import render, redirect
 from .models import Users
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
+from django.core.files.storage import default_storage
+from django.views.decorators.csrf import csrf_exempt
 
 # INICIO: Maneja el formulario inicial, guarda el username en sesión y en la DB, y redirige al chat
 def nickname(request):
@@ -50,3 +52,14 @@ def user_profile(request, username):
     receiver = get_object_or_404(User, username=username)
     username = request.session.get('username')
     return render(request, 'user_profile.html', {'receiver': receiver, 'username': username})
+
+@csrf_exempt
+def upload_audio(request):
+    if request.method == "POST":
+        audio = request.FILES["audio"]
+
+        path = default_storage.save(f"audios/{audio.name}", audio)
+
+        return JsonResponse({
+            "url": f"/media/{path}"
+        })
