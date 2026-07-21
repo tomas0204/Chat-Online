@@ -31,3 +31,17 @@ export function openChat(receiver) {
         }
     };
 }
+
+export function sendMessage(data) {
+    if (!socket) {
+        console.log("❌ No hay socket");
+        return;
+    }
+
+    if (socket.readyState !== WebSocket.OPEN) {
+        console.log("❌ Socket cerrado:", socket.readyState);
+        return;
+    }
+
+    socket.send(JSON.stringify(data));
+}

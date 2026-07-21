@@ -4,7 +4,7 @@ import {
     input, sendBtn, socket, currentReceiver, currentUser, getEmojiElements,
     getRecordButton
 } from "./state.js";
-import { openChat } from "./socket.js";
+import { openChat, sendMessage } from "./socket.js";
 
 document.addEventListener("click", function (e) {
     if (e.target.closest(".conversation-item-dropdown-toggle")) {
@@ -46,16 +46,11 @@ document.addEventListener("click", function (e) {
 sendBtn.addEventListener("click", function () {
     const message = input.value.trim();
 
-    if (!message || !socket) {
-        console.log("❌ No hay socket o mensaje vacío");
-        return;
-    }
-
-    socket.send(JSON.stringify({
+    sendMessage({
         type: "text",
         message: message,
         to: currentReceiver
-    }));
+    });
 
     input.value = "";
 });
@@ -196,13 +191,12 @@ getRecordButton().addEventListener("click", async () => {
 
             console.log("URL del audio:", data.url);
 
-            // ✅ AHORA sí mandás por WebSocket
-            socket.send(JSON.stringify({
+            sendMessage({
                 type: "audio",
                 message: "Audio enviado",
                 audio_url: data.url,
                 to: currentReceiver
-            }));
+            });
 
             console.log("🎧 audio enviado correctamente");
         };

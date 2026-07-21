@@ -20,6 +20,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def disconnect(self, close_code):
+        print("Socket cerrado con código:", close_code)
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
@@ -27,11 +28,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     # 📩 recibir mensaje desde JS
     async def receive(self, text_data):
+        
+        try:
+            data = json.loads(text_data)
+            print("RECIBIDO:", data)
+
+            sender = self.scope["url_route"]["kwargs"].get("sender")
+            print("SENDER:", sender)
+
+        except Exception as e:
+            print("ERROR EN RECEIVE:", e)
+        
         data = json.loads(text_data)
 
         msg_type = data.get("type", "text")  # default texto
         sender = self.scope["url_route"]["kwargs"]["sender"]
-
+        print("RECIBIDO:", text_data)
         await self.channel_layer.group_send(
             self.room_group_name,
             {
@@ -46,10 +58,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     # 📤 enviar mensaje al frontend
     async def chat_message(self, event):
-        print(f"📩 Mensaje recibido en el grupo {self.room_group_name}: {event['data'].get('message')} de {event['sender']}")
-        await self.send(text_data=json.dumps({
-            'message': event['data'].get('message'),
-            'sender': event['sender'],
-            'msg_type': event['msg_type'],
-            "audio_url": event['data'].get('audio_url', None)  
-        }))
+        try:
+            receiver = event['data'].get('to')
+
+            # ⚠️ solo enviar si corresponde
+            if self.scope["url_route"]["kwargs"]["sender"] != receiver:
+                await self.send(text_data=json.dumps({
+                    'message': event['data'].get('message'),
+                    'sender': event['sender'],
+                    'msg_type': event['msg_type'],
+                    "audio_url": event['data'].get('audio_url', None)
+                }))
+
+        except Exception as e:
+            print("❌ Error enviando mensaje:", e)
