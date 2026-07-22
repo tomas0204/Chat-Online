@@ -1,12 +1,17 @@
 import {openChat} from "./socket.js";
 import {recentMessagesContainer, currentReceiver} from "./state.js";
 
-export function addToRecent(username) {
+export function addToRecent(username, message) {
     // evitar duplicados
     const existing = recentMessagesContainer.querySelector(`[data-username="${username}"]`);
     
     if (existing) {
         const li = existing.closest("li");
+
+        // 🔥 actualizar mensaje también aquí
+        const text = li.querySelector(".content-message-text");
+        if (text) text.textContent = message;
+
         recentMessagesContainer.insertBefore(li, recentMessagesContainer.children[1]);
         return;
     }
@@ -39,7 +44,8 @@ export function addToRecent(username) {
     // <span class="content-message-text">
     const text = document.createElement("span");
     text.classList.add("content-message-text");
-    text.textContent = "";
+    text.textContent = message;
+    console.log("MENSAJE: " + message)
 
     info.appendChild(name);
     info.appendChild(text);
@@ -74,4 +80,59 @@ export function addToRecent(username) {
     openChat(username);
     // insertar debajo del título
     recentMessagesContainer.insertBefore(li, recentMessagesContainer.children[1]);
+}
+
+export function handleNewChat(data) {
+    const user = data.from;
+
+    // ❓ ya existe en sidebar?
+    const exists = document.querySelector(`[data-user="${user}"]`);
+
+    if (!exists) {
+        addChatToSidebar(user, data.message);
+    } else {
+        updateChatPreview(user, data.message);
+    }
+}
+
+// Notifications
+
+function getCurrentTime() {
+    const now = new Date();
+    return now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
+export function addChatToSidebar(user, message) {
+
+    // 🔍 buscar si ya existe
+    const existing = recentMessagesContainer.querySelector(
+        `[data-username="${user}"]`
+    );
+
+    // ✅ SI YA EXISTE → actualizar + mover arriba
+    if (existing) {
+        const li = existing.closest("li");
+
+        // actualizar último mensaje
+        const text = li.querySelector(".content-message-text");
+        if (text) text.textContent = message;
+
+        // incrementar unread
+        const unread = li.querySelector(".content-message-unread");
+        if (unread) {
+            let count = parseInt(unread.textContent) || 0;
+            unread.textContent = count + 1;
+        }
+
+        // mover arriba
+        recentMessagesContainer.appendChild(li);
+
+        return;
+    }
+
+    addToRecent(user, message)
+}
+
+export function updateSidebar(user, message) {
+    addChatToSidebar(user, message);
 }
