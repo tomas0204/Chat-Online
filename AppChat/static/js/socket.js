@@ -7,7 +7,14 @@ export function openChat(receiver) {
     setCurrentReceiver(receiver);
     document.getElementById("chat-username-open").textContent = receiver;
 
-    // cerrar anterior
+    // 🚫 si ya estás en este chat, no abras otro socket
+    if (socket && currentReceiver === receiver && socket.readyState === WebSocket.OPEN) {
+        console.log("⚠️ Ya existe conexión para este chat");
+        return;
+    }
+
+    setCurrentReceiver(receiver);
+
     if (socket) {
         socket.close();
     }
@@ -20,8 +27,8 @@ export function openChat(receiver) {
 
     newSocket.onmessage = (e) => {
         const data = JSON.parse(e.data);
+        console.log(currentUser)
         const isMe = data.sender === currentUser;
-        console.log("📩 Mensaje recibido:", data);
         if (data.msg_type === "text") {
             addMessage(data.message, isMe ? "received" : "sent");
         }
