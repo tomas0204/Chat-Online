@@ -9,8 +9,15 @@ import { addChatToSidebar, updateSidebar } from './sidebar.js';
 export function openChat(receiver) {
     const sender = currentUser;
 
-    setCurrentReceiver(receiver);
     document.getElementById("chat-username-open").textContent = receiver;
+
+    // 🚫 si ya estás en este chat, no abras otro socket
+    if (socket && currentReceiver === receiver && socket.readyState === WebSocket.OPEN) {
+        console.log("⚠️ Ya existe conexión para este chat");
+        return;
+    }
+
+    setCurrentReceiver(receiver);
 
     // cerrar anterior
     if (socket) {

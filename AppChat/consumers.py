@@ -65,18 +65,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # 📤 enviar mensaje al frontend
     async def chat_message(self, event):
         try:
-            receiver = event['data'].get('to')
-
-            # ⚠️ solo enviar si corresponde
-            if self.scope["url_route"]["kwargs"]["sender"] != receiver:
-                await self.send(text_data=json.dumps({
-                    'message': event['data'].get('message'),
-                    'sender': event['sender'],
-                    'receiver': event['data'].get('to'),
-                    'msg_type': event['msg_type'],
-                    "audio_url": event['data'].get('audio_url', None)
-                }))
-
+            await self.send(text_data=json.dumps({
+                'message': event['data'].get('message'),
+                'sender': event['sender'],
+                'msg_type': event['msg_type'],
+                "audio_url": event['data'].get('audio_url', None)
+            }))
         except Exception as e:
             print("❌ Error enviando mensaje:", e)
             
