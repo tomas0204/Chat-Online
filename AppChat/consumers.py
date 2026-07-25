@@ -1,6 +1,7 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-
+from channels.db import database_sync_to_async
+from .models import Message
     
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -29,7 +30,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # 📩 recibir mensaje desde JS
     async def receive(self, text_data):
 
-        
         data = json.loads(text_data)
 
         msg_type = data.get("type", "text")
@@ -59,7 +59,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 }
             }
         )
-        
+      
         print(f"📩 Mensaje enviado al grupo {self.room_group_name}: {data.get('message')} de {self.scope['user'].username}")
 
     # 📤 enviar mensaje al frontend

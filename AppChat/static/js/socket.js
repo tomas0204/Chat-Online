@@ -99,7 +99,6 @@ function handleNotification(data) {
 
     //  esperado:
     // { type: "chat_message", from: "Tomas", message: "hola" }
-
     if (!data.from) return;
 
     // si ya estás en ese chat → ignorar
