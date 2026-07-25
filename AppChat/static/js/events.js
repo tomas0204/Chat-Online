@@ -143,14 +143,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const emoji = event.detail.unicode;
         getEmojiElements().inputEmoji.value += emoji;
     });
-
-    console.log("btn:", getEmojiElements().btn);
-    console.log("picker:", getEmojiElements().picker);
 });
 
 //RECORD
 let mediaRecorder;
 let audioChunks = [];
+
 getRecordButton().addEventListener("click", async () => {
 
     // 👉 iniciar grabación
@@ -210,20 +208,4 @@ getRecordButton().addEventListener("click", async () => {
         mediaRecorder.stop();
         console.log("⏹️ grabación detenida...");
     }
-});
-
-audio.addEventListener("loadedmetadata", () => {
-    const mins = Math.floor(audio.duration / 60);
-    const secs = Math.floor(audio.duration % 60)
-        .toString()
-        .padStart(2, "0");
-
-    time.textContent = `0:00 / ${mins}:${secs}`;
-});
-
-audio.addEventListener("timeupdate", () => {
-    if (!audio.duration) return;
-
-    const percent = (audio.currentTime / audio.duration) * 100;
-    progressBar.style.width = percent + "%";
 });

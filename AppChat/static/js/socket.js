@@ -1,10 +1,14 @@
 import { socket, currentReceiver, currentUser, setSocket, setCurrentReceiver } from './state.js';
 import { addMessage, addAudioMessage } from './chatUI.js';
+import { addChatToSidebar, updateSidebar } from './sidebar.js';
+
+/* =========================
+   💬 SOCKET DE CHAT
+========================= */
 
 export function openChat(receiver) {
     const sender = currentUser;
 
-    setCurrentReceiver(receiver);
     document.getElementById("chat-username-open").textContent = receiver;
 
     // 🚫 si ya estás en este chat, no abras otro socket
@@ -39,16 +43,76 @@ export function openChat(receiver) {
     };
 }
 
+/* =========================
+   📤 ENVIAR MENSAJES
+========================= */
+
 export function sendMessage(data) {
+
     if (!socket) {
         console.log("❌ No hay socket");
         return;
     }
 
     if (socket.readyState !== WebSocket.OPEN) {
-        console.log("❌ Socket cerrado:", socket.readyState);
+        console.log("❌ Socket no está abierto:", socket.readyState);
         return;
     }
 
     socket.send(JSON.stringify(data));
+}
+
+
+/* =========================
+   🔔 SOCKET DE NOTIFICACIONES
+========================= */
+
+let notifications = null;
+
+export function initNotifications() {
+    console.log("🔥 INIT NOTIFICATIONS");
+    notifications = new WebSocket(
+        `ws://127.0.0.1:8000/ws/notifications/${currentUser}/`
+    );
+
+    notifications.onopen = () => {
+        console.log("🔔 Notifications conectado");
+    };
+
+    notifications.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+        console.log("🔔 Notificación recibida:", data);
+
+        handleNotification(data);
+    };
+
+    notifications.onclose = (e) => {
+        console.log("❌ Notifications cerrado:", e.code);
+    };
+}
+
+/* =========================
+   🧠 MANEJO DE NOTIFICACIONES
+========================= */
+
+function handleNotification(data) {
+
+    //  esperado:
+    // { type: "chat_message", from: "Tomas", message: "hola" }
+
+    if (!data.from) return;
+
+    // si ya estás en ese chat → ignorar
+    if (data.from === currentReceiver) return;
+
+    console.log("📌 Nuevo mensaje de:", data.from);
+
+    // si no existe → crear
+    const existing = document.querySelector(`[data-user="${data.from}"]`);
+
+    if (!existing) {
+        addChatToSidebar(data.from, data.message);
+    } else {
+        updateSidebar(data.from, data.message);
+    }
 }
