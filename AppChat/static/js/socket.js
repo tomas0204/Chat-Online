@@ -19,7 +19,6 @@ export function openChat(receiver) {
 
     setCurrentReceiver(receiver);
 
-    // cerrar anterior
     if (socket) {
         socket.close();
     }
@@ -32,8 +31,8 @@ export function openChat(receiver) {
 
     newSocket.onmessage = (e) => {
         const data = JSON.parse(e.data);
+        console.log(currentUser)
         const isMe = data.sender === currentUser;
-        console.log("📩 Mensaje recibido:", data);
         if (data.msg_type === "text") {
             addMessage(data.message, isMe ? "received" : "sent");
         }
