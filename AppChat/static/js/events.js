@@ -73,6 +73,12 @@ document.addEventListener('click', function (e) {
         document.querySelector('.chat-sidebar-profile').classList.remove('active')
     }
 })
+
+const searchInput = document.getElementById("search-input");
+searchInput.addEventListener("input", async () => {
+    const res = await fetch(`/search_users?query=${searchInput.value}`);
+});
+
 // end: Sidebar
 
 

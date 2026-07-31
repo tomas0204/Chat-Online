@@ -38,13 +38,43 @@ def hellochat(request):
 
 
 # BUSCA USUARIOS: Busca usuarios por texto (query) y devuelve resultados al template
+
+def get_recent_chats(user):
+    from .models import Message
+
+    # Trae todos los mensajes donde participa el usuario
+    messages = Message.objects.filter(
+        sender=user.username
+    ) | Message.objects.filter(
+        receiver=user.username
+    )
+
+    messages = messages.order_by("-timestamp")
+
+    chats = {}
+    
+    for msg in messages:
+        # identificar el otro usuario
+        other = msg.receiver if msg.sender == user.username else msg.sender
+
+        if other not in chats:
+            chats[other] = {
+                "username": other,
+                "last_message": msg.content,
+                "time": msg.timestamp.strftime("%H:%M"),
+                "unread": 0  # después lo mejoramos
+            }
+
+    return chats.values()
+
 def search_users(request):
     username = request.session.get('username')
-    print("USER HTTP:", request.user, request.user.is_authenticated)
     query = request.GET.get('query', '')
     users = User.objects.filter(username__icontains=query) if query else []
-    print(query, users)
-    return render(request, 'chat.html', {'username': username, 'users': users, 'query': query})
+    recent_chats = list(get_recent_chats(request.user))
+    print("💭 CHATS RECIENTES")
+    print(recent_chats)
+    return render(request, 'chat.html',{'username': username, 'users': users, 'recent_chats': recent_chats, 'query': query})
 
 
 # VIEW 3: Muestra el perfil de un usuario específico según el username recibido

@@ -44,7 +44,7 @@
         <!-- start: Content side -->
         <div class="content-sidebar">
           <div class="content-sidebar-title">Chats</div>
-          <form action="{% url 'search_users' %}" method="get" class="content-sidebar-form">
+          <form id="search-input" action="{% url 'search_users' %}" class="content-sidebar-form">
             <input type="search" name="query" class="content-sidebar-input" placeholder="Search..." value="{{ query }}"
               autocomplete="off">
             <button type="submit" class="content-sidebar-submit"><i class="ri-search-line"></i></button>
@@ -55,7 +55,7 @@
             <ul class="content-messages-list">
               <li class="content-message-title"><span>Search Results</span></li>
               {% for user in users %}
-              <li class="#conversation-1">
+              <li>
                 <a href="#" class="user-link agree-chat" data-username="{{ user.username }}">
                   <img class="content-message-image"
                     src="https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
@@ -80,11 +80,26 @@
           </div>
           {% endif %}
           <div class="content-messages">
-            <ul class="content-messages-list">
-              <ul class="content-messages-list" id="recent-messages">
-                <li class="content-message-title"><span>Recently</span></li>
+            <ul class="content-messages-list" id="recent-messages">
+              <li class="content-message-title"><span>Recently</span></li>
+              {% for chat in recent_chats %}
+              <li>
+                <a href="#" class="user-link agree-chat" data-username="{{ chat.username }}">
+                  <img class="content-message-image"
+                    src="https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg">
 
-              </ul>
+                  <span class="content-message-info">
+                    <span class="content-message-name">{{ chat.username }}</span>
+                    <span class="content-message-text">{{ chat.last_message }}</span>
+                  </span>
+
+                  <span class="content-message-more">
+                    <span class="content-message-unread">{{ chat.unread }}</span>
+                    <span class="content-message-time">{{ chat.time }}</span>
+                  </span>
+                </a>
+              </li>
+              {% endfor %}
             </ul>
           </div>
         </div>
