@@ -5,23 +5,40 @@ import { addChatToSidebar, updateSidebar } from './sidebar.js';
 /* =========================
    💬 SOCKET DE CHAT
 ========================= */
+async function loadMessages(user, other_user) {
+
+    const response = await fetch(
+        `/messages/${user}/${other_user}/`
+    );
+
+    const messages = await response.json();
+
+    messages.forEach(msg => {
+
+        const type = msg.sender === user 
+            ? "sent" 
+            : "received";
+
+        addMessage(
+            msg.message,
+            type
+        );
+
+    });
+}
 
 export function openChat(receiver) {
     const sender = currentUser;
 
     document.getElementById("chat-username-open").textContent = receiver;
-
-    // 🚫 si ya estás en este chat, no abras otro socket
-    if (socket && currentReceiver === receiver && socket.readyState === WebSocket.OPEN) {
-        console.log("⚠️ Ya existe conexión para este chat");
-        return;
-    }
-
     setCurrentReceiver(receiver);
+    document.querySelector(".conversation-wrapper").innerHTML = "";
 
     if (socket) {
         socket.close();
     }
+
+    loadMessages(sender, receiver);
 
     // abrir nuevo
     let newSocket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${sender}/${receiver}/`);
