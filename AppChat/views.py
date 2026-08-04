@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from django.shortcuts import render, redirect
-from .models import Users
-from django.http import HttpResponseRedirect, JsonResponse
+from .models import Message
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.core.files.storage import default_storage
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 
 # INICIO: Maneja el formulario inicial, guarda el username en sesión y en la DB, y redirige al chat
 def nickname(request):
@@ -93,3 +94,21 @@ def upload_audio(request):
         return JsonResponse({
             "url": f"/media/{path}"
         })
+
+def get_messages(request, user, other_user):
+
+    messages = Message.objects.filter(
+        Q(sender=user, receiver=other_user) |
+        Q(sender=other_user, receiver=user)
+    ).order_by("timestamp")
+
+    data = [
+        {
+            "sender": msg.sender,
+            "message": msg.content,
+            "timestamp": msg.timestamp.strftime("%H:%M")
+        }
+        for msg in messages
+    ]
+
+    return JsonResponse(data, safe=False)

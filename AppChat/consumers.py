@@ -2,7 +2,7 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from .models import Message
-    
+
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         sender = self.scope["url_route"]["kwargs"]["sender"]
@@ -59,9 +59,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 }
             }
         )
-      
+        
+        await self.save_message(sender, receiver, data.get("message"))
+            
         print(f"📩 Mensaje enviado al grupo {self.room_group_name}: {data.get('message')} de {self.scope['user'].username}")
 
+                
+    @database_sync_to_async
+    def save_message(self, sender, receiver, content):
+        return Message.objects.create(
+            sender=sender,
+            receiver=receiver,
+            content=content
+    )
+    
     # 📤 enviar mensaje al frontend
     async def chat_message(self, event):
         try:
@@ -73,7 +84,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }))
         except Exception as e:
             print("❌ Error enviando mensaje:", e)
-            
+
 class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.username = self.scope["url_route"]["kwargs"]["username"]
