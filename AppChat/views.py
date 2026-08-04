@@ -31,15 +31,12 @@ def nickname(request):
             print("No se proporcionó un nombre de usuario válido")
     return render(request, "nickname.html")
 
-
 # VIEW 1: Carga la página principal del chat con el username desde sesión
 def hellochat(request):
     username = request.session.get('username')
     return render(request, "chat.html", {'username': username})
 
-
 # BUSCA USUARIOS: Busca usuarios por texto (query) y devuelve resultados al template
-
 def get_recent_chats(user):
     from .models import Message
 
@@ -77,7 +74,6 @@ def search_users(request):
     print(recent_chats)
     return render(request, 'chat.html',{'username': username, 'users': users, 'recent_chats': recent_chats, 'query': query})
 
-
 # VIEW 3: Muestra el perfil de un usuario específico según el username recibido
 def user_profile(request, username):
     receiver = get_object_or_404(User, username=username)
@@ -112,3 +108,7 @@ def get_messages(request, user, other_user):
     ]
 
     return JsonResponse(data, safe=False)
+
+def user_profile(request, username):
+    user_obj = get_object_or_404(User, username=username)
+    return render(request, 'user_profile.html', {'user_obj': user_obj})
