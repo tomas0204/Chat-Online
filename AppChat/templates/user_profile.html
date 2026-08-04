@@ -7,12 +7,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="{% static 'tailwindcss-colors.css' %}?=v25">
-  <link rel="stylesheet" type="text/css" href="{% static 'chat.css' %}?=v25">
+  <link rel="stylesheet" type="text/css" href="{% static 'tailwindcss-colors.css' %}?=v26">
+  <link rel="stylesheet" type="text/css" href="{% static 'chat.css' %}?=v26">
+  <link rel="stylesheet" type="text/css" href="{% static 'user_profile.css' %}?=v2">
   <title>{% block title %}Chat{% endblock %}</title>
 </head>
 
-<body data-username="{{ username }}"> 
+<body data-username="{{ username }}">
   <!-- start: Chat -->
   <section class="chat-section">
     <div class="chat-container">
@@ -22,7 +23,7 @@
           <i class="ri-chat-1-fill"></i>
         </a>
         <ul class="chat-sidebar-menu">
-          <li class="active"><a href="#" data-title="Chats"><i class="ri-chat-3-line"></i></a></li>
+          <li class="active"><a href="{% url 'hellochat' %}" data-title="Chats"><i class="ri-chat-3-line"></i></a></li>
           <li><a href="#" data-title="Contacts"><i class="ri-contacts-line"></i></a></li>
           <li><a href="#" data-title="Documents"><i class="ri-folder-line"></i></a></li>
           <li><a href="#" data-title="Settings"><i class="ri-settings-line"></i></a></li>
@@ -32,114 +33,41 @@
                 alt="">
             </button>
             <ul class="chat-sidebar-profile-dropdown">
-              <li><a href="#"><i class="ri-user-line"></i> Profile</a></li>
+              <li><a href="#"><i class="ri-user-line"></i> Profile</a>
+              </li>
               <li><a href="#"><i class="ri-logout-box-line"></i> Logout</a></li>
             </ul>
           </li>
         </ul>
       </aside>
       <!-- end: Sidebar -->
-       
+
       <!-- start: Content -->
       <div class="chat-content">
-        <!-- start: Content side -->
-        <div class="content-sidebar">
-          <div class="content-sidebar-title">Chats</div>
-          <form action="{% url 'search_users' %}" method="get" class="content-sidebar-form">
-            <input type="search" name="query" class="content-sidebar-input" placeholder="Search Nickname"
-              value="{{ query }}" autocomplete="off">
-            <button type="submit" class="content-sidebar-submit"><i class="ri-search-line"></i></button>
-          </form>
-          <div class="content-messages">
-            <ul class="content-messages-list">
-              <li class="content-message-title"><span>Recently</span></li>
-              {% if user %}
-              <li>
-                <a class="open-chat" data-conversation="#conversation-1" data-username="{{ receiver.username }}">
-                  <img class="content-message-image"
-                    src="https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
-                    alt="">
-                  <span class="content-message-info open-chat" >
-                    <span class="content-message-name">{{ receiver.username }} </span>
-                    <span class="content-message-text"> </span>
-                  </span>
-                  <span class="content-message-more">
-                    <span class="content-message-unread">5</span>
-                    <span class="content-message-time">12:30</span>
-                  </span>
-                </a>
-              </li>
-              {% endif %}
-            </ul>
+        <!-- start: user profile -->
+        <!-- From Uiverse.io by andrew-demchenk0 -->
+        <div class="card">
+          <div class="card__img">
+            <img src="https://image-assets.aus-2.volcanic.cloud/api/v1/assets/images/67339f3d440ad7ea7c3cc2e915f05032?t=1768527456&webp_fallback=png" alt="banner">
+          </div>
+          <div class="card__avatar">
+            <img src="https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
+              alt="avatar">
+          </div>
+          <div class="card__title">{{ user_obj.username }}</div>
+          <div class="card__subtitle">-------------</div>
+          <div class="card__wrapper">
+            <button class="card__btn">Change Avatar</button>
+            <button class="card__btn card__btn-solid">Change Banner</button>
           </div>
         </div>
-        <!-- end: Content side -->
-        <!-- start: Conversation -->
-        <div class="conversation conversation-default active">
-          <i class="ri-chat-3-line"></i>
-          <p> Hi {{ username }} select chat and view conversation!</p>
-        </div>
-        <div class="conversation" id="conversation-1">
-          <div class="conversation-top">
-            <button type="button" class="conversation-back"><i class="ri-arrow-left-line"></i></button>
-            <div class="conversation-user">
-              <img class="conversation-user-image"
-                src="https://as1.ftcdn.net/v2/jpg/03/46/83/96/1000_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
-                alt="">
-              <div>
-                <div class="conversation-user-name">{{ receiver.username }}</div>
-                <div class="conversation-user-status online">online</div>
-              </div>
-            </div>
-            <div class="conversation-buttons">
-              <button type="button"><i class="ri-phone-fill"></i></button>
-              <button type="button"><i class="ri-vidicon-line"></i></button>
-              <button type="button"><i class="ri-information-line"></i></button>
-            </div>
-          </div>
-          <div class="conversation-main">
-            <ul class="conversation-wrapper">
-              <div class="coversation-divider"><span>Today</span></div>
-              
-            </ul>
-          </div>
-          <div class="conversation-form">
-            <button type="button" class="conversation-form-button"><i class="ri-emotion-line"></i></button>
-            <div class="conversation-form-group">
-              <textarea class="conversation-form-input" rows="1" placeholder="Type here..."></textarea>
-              <button type="button" class="conversation-form-record"><i class="ri-mic-line"></i></button>
-            </div>
-            <button type="button" class="conversation-form-button conversation-form-submit"><i
-                class="ri-send-plane-2-line"></i></button>
-          </div>
-        </div>
-        <div class="conversation" id="conversation-2">
-          <div class="conversation-top">
-            <button type="button" class="conversation-back"><i class="ri-arrow-left-line"></i></button>
-            <div class="conversation-user">
-              <img class="conversation-user-image"
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-                alt="">
-              <div>
-                <div class="conversation-user-name">Usuario</div>
-                <div class="conversation-user-status online">online</div>
-              </div>
-            </div>
-            <div class="conversation-buttons">
-              <button type="button"><i class="ri-phone-fill"></i></button>
-              <button type="button"><i class="ri-vidicon-line"></i></button>
-              <button type="button"><i class="ri-information-line"></i></button>
-            </div>
-          </div>
-
-        </div>
-        <!-- end: Conversation -->
+        <!-- end: user profile -->
       </div>
       <!-- end: Content -->
     </div>
   </section>
   <!-- end: Chat -->
-  <script src="{% static 'chat.js' %}?=v5"></script>
+  <script type="module" src="{% static 'js/user_profile.js' %}?v=11"></script>
 </body>
 
 </html>
