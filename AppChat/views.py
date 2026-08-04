@@ -9,6 +9,9 @@ from django.core.files.storage import default_storage
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 
+def coming_soon(request):
+    return render(request, "coming_soon.html")
+
 # INICIO: Maneja el formulario inicial, guarda el username en sesión y en la DB, y redirige al chat
 def nickname(request):
     if request.method == "POST":

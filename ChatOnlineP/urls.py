@@ -14,4 +14,5 @@ urlpatterns = [
     path("search_users", search_users, name="search_users"),
     path("messages/<str:user>/<str:other_user>/", get_messages, name="get_messages"),
     path("user_profile/<str:username>/", user_profile, name="user_profile"),
+    path("coming_soon/", coming_soon, name="coming_soon"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
