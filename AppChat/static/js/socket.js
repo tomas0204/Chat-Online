@@ -16,8 +16,8 @@ async function loadMessages(user, other_user) {
     messages.forEach(msg => {
 
         const type = msg.sender === user 
-            ? "sent" 
-            : "received";
+            ? "received" 
+            : "sent";
 
         addMessage(
             msg.message,
