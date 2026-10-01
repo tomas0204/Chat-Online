@@ -1,0 +1,99 @@
+/* From Uiverse.io by andrew-demchenk0 */ 
+.chat-content{
+    display: flex;
+    justify-content: center;  /* centra horizontal */
+    align-items: center;      /* centra vertical */
+    min-height: 100vh;        /* ocupa toda la pantalla */
+}
+
+.card {
+  --main-color: white;
+  --submain-color: #78858F;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 20px;
+  background: var(--slate-100);
+}
+
+.card__img {
+  width: 100%;
+  height: 192px;
+  overflow: hidden;
+  border-radius: 20px 20px 0 0;
+  border-bottom: 10px solid var(--slate-900);
+}
+
+.card__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 🔥 ajusta sin deformar */
+  display: block;
+}
+
+.card__avatar {
+  position: relative;
+  width: 190px;
+  height: 190px;
+  background-color: var(--slate-900);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: -95px;
+    overflow: hidden;
+}
+
+.card__avatar img {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  object-fit: cover; /* evita que se deforme */
+}
+
+
+.card__title {
+  margin-top: 0px;
+  font-weight: 500;
+  font-size: 18px;
+  color: var(--main-color);
+}
+
+.card__subtitle {
+  margin-top: 10px;
+  font-weight: 400;
+  font-size: 15px;
+  color: var(--submain-color);
+}
+
+.card__btn {
+  margin-top: 15px;
+  width: 120px;
+  height: 31px;
+  border: 2px solid var(--slate-400);
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 11px;
+  background: var(--slate-900);
+  text-transform: uppercase;
+  transition: all 0.3s;
+  color: var(--main-color);
+}
+
+.card__btn-solid {
+  background: var(--slate-900);
+  color: var(--bg-color);
+}
+
+.card__btn:hover {
+  background: var(--slate-800);
+  color: var(--bg-color);
+}
+
+.card__btn-solid:hover {
+  background: var(--slate-800);
+  color: var(--main-color);
+}
