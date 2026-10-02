@@ -5,6 +5,12 @@ import { addChatToSidebar, updateSidebar } from './sidebar.js';
 /* =========================
    💬 SOCKET DE CHAT
 ========================= */
+
+function getWebSocketURL(path) {
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    return `${protocol}//${window.location.host}${path}`;
+}
+
 async function loadMessages(user, other_user) {
 
     const response = await fetch(
@@ -41,7 +47,7 @@ export function openChat(receiver) {
     loadMessages(sender, receiver);
 
     // abrir nuevo
-    let newSocket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${sender}/${receiver}/`);
+    let newSocket = new WebSocket(getWebSocketURL(`/ws/chat/${sender}/${receiver}/`));
     setSocket(newSocket);
 
     newSocket.onopen = () => console.log("✅ conectado");
@@ -89,7 +95,7 @@ let notifications = null;
 export function initNotifications() {
     console.log("🔥 INIT NOTIFICATIONS");
     notifications = new WebSocket(
-        `ws://127.0.0.1:8000/ws/notifications/${currentUser}/`
+        getWebSocketURL(`/ws/notifications/${currentUser}/`)
     );
 
     notifications.onopen = () => {
